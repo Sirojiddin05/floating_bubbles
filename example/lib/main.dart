@@ -43,10 +43,7 @@ class HomePage extends StatelessWidget {
         Positioned.fill(
           child: FloatingBubbles.alwaysRepeating(
             noOfBubbles: 50,
-            colorsOfBubbles: const [
-              Colors.white,
-              Colors.red,
-            ],
+            color: Colors.red,
             sizeFactor: 0.2,
             opacity: 70,
             speed: BubbleSpeed.slow,
