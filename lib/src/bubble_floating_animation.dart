@@ -162,8 +162,8 @@ class BubbleModel extends CustomPainter {
       final progress = particle.progress();
       final MultiTweenValues animation = particle.tween.transform(progress);
       final position = Offset(
-        animation.get<double>(_OffsetProps.x) * size.width,
-        animation.get<double>(_OffsetProps.y) * size.height,
+        animation.get<double>(_OffsetProps.x) * size.height,
+        animation.get<double>(_OffsetProps.y) * size.width,
       );
       final Path bubblePath = Path();
 
