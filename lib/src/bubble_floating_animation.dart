@@ -49,15 +49,15 @@ class BubbleFloatingAnimation {
       ..add(
         _OffsetProps.x,
         Tween(
-          begin: startPosition.dx,
-          end: endPosition.dx,
+          begin: startPosition.dy,
+          end: endPosition.dy,
         ),
       )
       ..add(
         _OffsetProps.y,
         Tween(
-          begin: startPosition.dy,
-          end: endPosition.dy,
+          begin: startPosition.dx,
+          end: endPosition.dx,
         ),
       );
 
@@ -174,15 +174,19 @@ class BubbleModel extends CustomPainter {
         ));
       }
 
-      // Draw shadow with custom settings
       canvas.drawShadow(
         bubblePath,
         shadowBaseColor,
         4.0, // Adjust the blur radius if needed
         false, // Adjust if shadow should be behind the object
       );
+      canvas.drawShadow(
+        bubblePath,
+        Colors.white,
+        4.0, // Adjust the blur radius if needed
+        false, // Adjust if shadow should be behind the object
+      );
 
-      // Draw the bubble (either filled or stroke)
       canvas.drawPath(bubblePath, paint);
     });
   }
