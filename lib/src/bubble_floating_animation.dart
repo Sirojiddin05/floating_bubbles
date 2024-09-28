@@ -31,20 +31,29 @@ class BubbleFloatingAnimation {
 
   late double dx;
   late double dy;
+  late double dyDirection;
 
   BubbleFloatingAnimation(this.random, {required this.color, required this.speed}) {
-    dx = random.nextDouble(); // Random X-axis start
-    dy = random.nextDouble();
-    _restart();
-    _shuffle();
+    dx = random.nextDouble(); // Random start X position
+    dy = random.nextDouble(); // Random start Y position
+    dyDirection = random.nextBool() ? 1 : -1;
   }
 
   void updatePosition() {
     dx += _getSpeedFactor();
 
-    // Reset the bubble if it moves off the right side of the screen
+    // Vertical "floating" effect: make the bubble drift slightly up or down
+    dy += dyDirection * 0.001; // Change this value to control the amount of vertical drift
+
+    // If the bubble moves off the right side of the screen, reset it to the left
     if (dx > 1.0) {
       dx = 0.0;
+      dy = random.nextDouble(); // Reset the Y position for a more random effect
+    }
+
+    // Reverse direction of Y drift if it goes out of bounds
+    if (dy > 1.0 || dy < 0.0) {
+      dyDirection *= -1;
     }
   }
 
@@ -121,9 +130,11 @@ class BubbleFloatingAnimation {
   }
 
   /// A Function to Check if a bubble needs to be recontructed in the ui.
+  // Restart the bubble's position if necessary
   void checkIfBubbleNeedsToBeRestarted() {
     if (dx > 1.0) {
       dx = 0.0; // Reset X position
+      dy = random.nextDouble(); // Reset Y position for randomness
     }
   }
 
@@ -193,10 +204,14 @@ class BubbleModel extends CustomPainter {
       //   animation.get<double>(_OffsetProps.y) * size.height,
       //   animation.get<double>(_OffsetProps.x) * size.width,
       // );
+      canvas.drawCircle(position, size.width * sizeFactor, paint);
       final Path bubblePath = Path();
 
       if (shape == BubbleShape.circle) {
-        canvas.drawCircle(position, size.width * sizeFactor, paint);
+        bubblePath.addOval(Rect.fromCircle(
+          center: position,
+          radius: size.width * sizeFactor * particle.size,
+        ));
       }
 
       canvas.drawShadow(
