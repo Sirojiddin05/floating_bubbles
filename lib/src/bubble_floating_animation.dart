@@ -29,22 +29,21 @@ class BubbleFloatingAnimation {
   /// Speed of the bubble
   final BubbleSpeed speed;
 
-  late double xPosition;
-  late double yPosition;
+  late double dx;
+  late double dy;
 
   BubbleFloatingAnimation(this.random, {required this.color, required this.speed}) {
-    xPosition = random.nextDouble(); // Random X-axis start
-    yPosition = random.nextDouble();
-    _restart();
-    _shuffle();
+    dx = random.nextDouble(); // Random start X position
+    dy = random.nextDouble(); // Random start Y position (remains fixed)
+    // _restart();
+    // _shuffle();
   }
   void updatePosition() {
-    // Move the bubble horizontally by adjusting the xPosition
-    xPosition += _getSpeedFactor();
+    dx += _getSpeedFactor();
 
-    // If the bubble moves off the right side of the screen, reset it to the left
-    if (xPosition > 1.0) {
-      xPosition = 0.0;
+    // Reset the bubble if it moves off the right side of the screen
+    if (dx > 1.0) {
+      dx = 0.0;
     }
   }
 
@@ -186,9 +185,9 @@ class BubbleModel extends CustomPainter {
         ..style = paintingStyle
         ..strokeWidth = strokeWidth;
 
-      final progress = particle.xPosition; // Use xPosition for horizontal movement
-      final position = Offset(progress * size.width, particle.yPosition * size.height);
-      final MultiTweenValues animation = particle.tween.transform(progress);
+      // final progress = particle.dx; // Use xPosition for horizontal movement
+      final position = Offset(particle.dx * size.width, particle.dy * size.height);
+      // final MultiTweenValues animation = particle.tween.transform(progress);
       // final position = Offset(
       //   animation.get<double>(_OffsetProps.y) * size.height,
       //   animation.get<double>(_OffsetProps.x) * size.width,
