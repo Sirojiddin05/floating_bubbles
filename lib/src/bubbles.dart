@@ -22,7 +22,7 @@ class FloatingBubbles extends StatefulWidget {
   ///
   /// For example `colorOfBubbles = Colors.white.withAlpha(30).`\
   ///`withAlpha(30)` will give a lighter shade to the bubbles.
-  final Color color;
+  final List<Color> colorsOfBubbles;
 
   /// Add Size Factor to the bubbles
   ///
@@ -57,7 +57,7 @@ class FloatingBubbles extends StatefulWidget {
   /// `FloatingBubbles.alwaysRepeating()`.
   FloatingBubbles({
     required this.noOfBubbles,
-    required this.color,
+    required this.colorsOfBubbles,
     required this.sizeFactor,
     required this.duration,
     this.shape = BubbleShape.circle,
@@ -83,7 +83,7 @@ class FloatingBubbles extends StatefulWidget {
   /// All Fields Are Required to make a new [Instance] of FloatingBubbles.
   FloatingBubbles.alwaysRepeating({
     required this.noOfBubbles,
-    required this.color,
+    required this.colorsOfBubbles,
     required this.sizeFactor,
     this.shape = BubbleShape.circle,
     this.opacity = 60,
@@ -126,7 +126,7 @@ class _FloatingBubblesState extends State<FloatingBubbles> {
       bubbles.add(
         BubbleFloatingAnimation(
           random,
-          color: widget.color,
+          color: widget.colorsOfBubbles[_random.nextInt(widget.colorsOfBubbles.length)],
           speed: widget.speed,
         ),
       );
@@ -145,29 +145,8 @@ class _FloatingBubblesState extends State<FloatingBubbles> {
   /// Function to paint the bubbles to the screen.
   /// This is call the paint function in bubbles_floating_animation.dart.
   Widget drawBubbles({required CustomPainter bubbles}) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      width: 1,
-      height: 1,
-      margin: const EdgeInsets.all(1.4),
-      decoration: ShapeDecoration(
-        color: widget.color,
-        shape: const OvalBorder(),
-        shadows: [
-          BoxShadow(
-            offset: const Offset(0, 0),
-            blurRadius: .8,
-            spreadRadius: .4,
-            color: widget.color.withOpacity(.64),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 0),
-            blurRadius: .5,
-            spreadRadius: .4,
-            color: Colors.white.withOpacity(.25),
-          ),
-        ],
-      ),
+    return CustomPaint(
+      painter: bubbles,
     );
   }
 
@@ -189,6 +168,7 @@ class _FloatingBubblesState extends State<FloatingBubbles> {
                   paintingStyle: widget.paintingStyle,
                   strokeWidth: widget.strokeWidth,
                   shape: widget.shape,
+                  shadowBaseColor: widget.colorsOfBubbles.first,
                 ),
               );
             },
@@ -207,6 +187,7 @@ class _FloatingBubblesState extends State<FloatingBubbles> {
                     paintingStyle: widget.paintingStyle,
                     strokeWidth: widget.strokeWidth,
                     shape: widget.shape,
+                    shadowBaseColor: widget.colorsOfBubbles.first,
                   ),
                 );
               else
