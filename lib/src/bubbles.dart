@@ -201,7 +201,7 @@ class _FloatingBubblesState extends State<FloatingBubbles> {
   _simulateBubbles() {
     // bubbles.forEach((bubbles) => bubbles.checkIfBubbleNeedsToBeRestarted());
     for (var bubble in bubbles) {
-      bubble.updatePosition(); // Update the horizontal position of the bubble
+      bubble.updatePosition(); // Update the horizontal position of each bubble
     }
   }
 }

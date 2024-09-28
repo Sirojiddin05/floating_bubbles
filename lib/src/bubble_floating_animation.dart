@@ -33,11 +33,12 @@ class BubbleFloatingAnimation {
   late double dy;
 
   BubbleFloatingAnimation(this.random, {required this.color, required this.speed}) {
-    dx = random.nextDouble(); // Random start X position
-    dy = random.nextDouble(); // Random start Y position (remains fixed)
-    // _restart();
-    // _shuffle();
+    dx = random.nextDouble(); // Random X-axis start
+    dy = random.nextDouble();
+    _restart();
+    _shuffle();
   }
+
   void updatePosition() {
     dx += _getSpeedFactor();
 
@@ -122,7 +123,7 @@ class BubbleFloatingAnimation {
   /// A Function to Check if a bubble needs to be recontructed in the ui.
   void checkIfBubbleNeedsToBeRestarted() {
     if (dx > 1.0) {
-      dx = 0.0; // Reset to start
+      dx = 0.0; // Reset X position
     }
   }
 
@@ -185,7 +186,7 @@ class BubbleModel extends CustomPainter {
         ..style = paintingStyle
         ..strokeWidth = strokeWidth;
 
-      // final progress = particle.dx; // Use xPosition for horizontal movement
+      final progress = particle.progress();
       final position = Offset(particle.dx * size.width, particle.dy * size.height);
       // final MultiTweenValues animation = particle.tween.transform(progress);
       // final position = Offset(
@@ -195,10 +196,7 @@ class BubbleModel extends CustomPainter {
       final Path bubblePath = Path();
 
       if (shape == BubbleShape.circle) {
-        bubblePath.addOval(Rect.fromCircle(
-          center: position,
-          radius: size.width * sizeFactor * particle.size,
-        ));
+        canvas.drawCircle(position, size.width * sizeFactor, paint);
       }
 
       canvas.drawShadow(
