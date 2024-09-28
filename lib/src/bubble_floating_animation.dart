@@ -121,8 +121,8 @@ class BubbleFloatingAnimation {
 
   /// A Function to Check if a bubble needs to be recontructed in the ui.
   void checkIfBubbleNeedsToBeRestarted() {
-    if (xPosition > 1.0) {
-      xPosition = 0.0; // Reset to start
+    if (dx > 1.0) {
+      dx = 0.0; // Reset to start
     }
   }
 
