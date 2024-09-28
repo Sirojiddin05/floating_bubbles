@@ -29,9 +29,36 @@ class BubbleFloatingAnimation {
   /// Speed of the bubble
   final BubbleSpeed speed;
 
+  late double xPosition;
+  late double yPosition;
+
   BubbleFloatingAnimation(this.random, {required this.color, required this.speed}) {
+    xPosition = random.nextDouble(); // Random X-axis start
+    yPosition = random.nextDouble();
     _restart();
     _shuffle();
+  }
+  void updatePosition() {
+    // Move the bubble horizontally by adjusting the xPosition
+    xPosition += _getSpeedFactor();
+
+    // If the bubble moves off the right side of the screen, reset it to the left
+    if (xPosition > 1.0) {
+      xPosition = 0.0;
+    }
+  }
+
+  double _getSpeedFactor() {
+    switch (speed) {
+      case BubbleSpeed.fast:
+        return 0.02;
+      case BubbleSpeed.normal:
+        return 0.01;
+      case BubbleSpeed.slow:
+        return 0.005;
+      default:
+        return 0.01;
+    }
   }
 
   /// Function to Restart the floating bubble animation.
@@ -49,15 +76,15 @@ class BubbleFloatingAnimation {
       ..add(
         _OffsetProps.x,
         Tween(
-          begin: startPosition.dy,
-          end: endPosition.dy,
+          begin: startPosition.dx,
+          end: endPosition.dx,
         ),
       )
       ..add(
         _OffsetProps.y,
         Tween(
-          begin: startPosition.dx,
-          end: endPosition.dx,
+          begin: startPosition.dy,
+          end: endPosition.dy,
         ),
       );
 
@@ -94,9 +121,9 @@ class BubbleFloatingAnimation {
   }
 
   /// A Function to Check if a bubble needs to be recontructed in the ui.
-  checkIfBubbleNeedsToBeRestarted() {
-    if (progress() == 1.0) {
-      _restart();
+  void checkIfBubbleNeedsToBeRestarted() {
+    if (xPosition > 1.0) {
+      xPosition = 0.0; // Reset to start
     }
   }
 
@@ -159,12 +186,13 @@ class BubbleModel extends CustomPainter {
         ..style = paintingStyle
         ..strokeWidth = strokeWidth;
 
-      final progress = particle.progress();
+      final progress = particle.xPosition; // Use xPosition for horizontal movement
+      final position = Offset(progress * size.width, particle.yPosition * size.height);
       final MultiTweenValues animation = particle.tween.transform(progress);
-      final position = Offset(
-        animation.get<double>(_OffsetProps.y) * size.height,
-        animation.get<double>(_OffsetProps.x) * size.width,
-      );
+      // final position = Offset(
+      //   animation.get<double>(_OffsetProps.y) * size.height,
+      //   animation.get<double>(_OffsetProps.x) * size.width,
+      // );
       final Path bubblePath = Path();
 
       if (shape == BubbleShape.circle) {
@@ -177,12 +205,6 @@ class BubbleModel extends CustomPainter {
       canvas.drawShadow(
         bubblePath,
         shadowBaseColor,
-        4.0, // Adjust the blur radius if needed
-        false, // Adjust if shadow should be behind the object
-      );
-      canvas.drawShadow(
-        bubblePath,
-        Colors.white,
         4.0, // Adjust the blur radius if needed
         false, // Adjust if shadow should be behind the object
       );
