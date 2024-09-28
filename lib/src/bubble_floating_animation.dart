@@ -158,27 +158,24 @@ class BubbleModel extends CustomPainter {
         ..color = particle.color.withAlpha(opacity)
         ..style = paintingStyle
         ..strokeWidth = strokeWidth;
-      paint.color = shadowBaseColor.withOpacity(0.64);
-      canvas.drawShadow(
-        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
-        paint.color,
-        0.8, // blurRadius
-        true,
-      );
 
-      // Shadow 2: White color shadow
-      paint.color = Colors.white.withOpacity(0.25);
-      canvas.drawShadow(
-        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
-        paint.color,
-        0.5, // blurRadius
-        true,
-      ); //can be from 5 to 15.
       final progress = particle.progress();
       final MultiTweenValues animation = particle.tween.transform(progress);
       final position = Offset(
         animation.get<double>(_OffsetProps.x) * size.width,
         animation.get<double>(_OffsetProps.y) * size.height,
+      );
+      canvas.drawShadow(
+        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
+        shadowBaseColor,
+        0.8, // blurRadius
+        true,
+      );
+      canvas.drawShadow(
+        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
+        Colors.white,
+        0.5, // blurRadius
+        true,
       );
       canvas.drawCircle(
         position,
