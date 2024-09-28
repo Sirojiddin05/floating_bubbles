@@ -165,23 +165,25 @@ class BubbleModel extends CustomPainter {
         animation.get<double>(_OffsetProps.x) * size.width,
         animation.get<double>(_OffsetProps.y) * size.height,
       );
+      final Path bubblePath = Path();
+
+      if (shape == BubbleShape.circle) {
+        bubblePath.addOval(Rect.fromCircle(
+          center: position,
+          radius: size.width * sizeFactor * particle.size,
+        ));
+      }
+
+      // Draw shadow with custom settings
       canvas.drawShadow(
-        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
+        bubblePath,
         shadowBaseColor,
-        0.8, // blurRadius
-        true,
+        4.0, // Adjust the blur radius if needed
+        false, // Adjust if shadow should be behind the object
       );
-      canvas.drawShadow(
-        Path()..addRect(Rect.fromLTWH(20, 20, size.width - 40, size.height - 40)),
-        Colors.white,
-        0.5, // blurRadius
-        true,
-      );
-      canvas.drawCircle(
-        position,
-        size.width * sizeFactor * particle.size,
-        paint,
-      );
+
+      // Draw the bubble (either filled or stroke)
+      canvas.drawPath(bubblePath, paint);
     });
   }
 
